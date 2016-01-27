@@ -1,0 +1,29 @@
+This is a tool that can modify name decoration inside an import library.
+
+Sometimes you will find it hard to generate an import library like those in
+Windows SDK.
+
+Take Sleep in kernel32.dll for example.
+You may feel like to generate kernel32.lib from this .def file:
+
+LIBRARY kernel32.dll
+EXPORTS
+Sleep
+
+Then you will find the link was looking for _Sleep@4 not Sleep.
+If .def file is changed to:
+
+LIBRARY kernel32.dll
+EXPORTS
+Sleep@4
+
+Then the program won't run because it tries to import Sleep@4 from kernel32
+
+This tool can help you change the import name Sleep@4 to Sleep,
+while the linking name keeps Sleep@4. Just open the import library and
+change the 
+
+If you need targeted .net FW 2.0 but doesn't have the toolset.
+you may use ildasm to convert the CoreInterfaces.dll into .il,
+then convert it back into .dll by using the ilasm of .net fw 2.0 which could
+be found in "C:\Windows\Microsoft.NET\Framework\v2.0.50727".

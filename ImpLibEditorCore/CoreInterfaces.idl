@@ -1,0 +1,50 @@
+import "unknwn.idl";
+
+typedef [v1_enum] enum 
+{
+    INT_Undef = 1,
+    INT_Ordinal,
+    INT_KeepUnchanged,
+    INT_NoPrefix,
+    INT_UnDecorate
+} ImportNameType;
+
+[uuid("C6DBD441-1812-46B1-B5E0-04CBC1E4BB38")]
+interface IImpMember : IUnknown
+{
+    [propget] HRESULT DllName([string, out, retval] BSTR* pOut);
+    [propget] HRESULT IsImportByName([out, retval] VARIANT_BOOL* pOut);
+    [propget] HRESULT OrdinalOrHint([out, retval] short* pOut);
+    [propget] HRESULT SymbolName([string, out, retval] BSTR* pOut);
+    [propget] HRESULT ImportName([string, out, retval] BSTR* pOut);
+    [helpstring("Modify this property will write to memory buffer directly.")]
+    [propget] HRESULT ImportNameType([out, retval] ImportNameType* pOut);
+    [propput] HRESULT ImportNameType([in] ImportNameType pIn);
+}
+
+[uuid("1E6E622A-422F-450E-BBC7-D3DB6106C29A")]
+interface IImpLibWalker : IUnknown
+{
+    [helpstring("The ownership of pData is not transferred, keep it available when used in CLR.")]
+    HRESULT SetSource([ptr, in] byte* pData, [in] int nSize);
+    HRESULT MoveNext([out, retval] VARIANT_BOOL* pOut);
+    [propget] HRESULT Current([out, retval] IImpMember** pOut);
+    HRESULT ReWind([out, retval] VARIANT_BOOL* pOut);
+
+    HRESULT Translate([in, string] BSTR pIn, [in] ImportNameType nameType, [out, retval] BSTR* pOut);
+}
+
+[uuid("6FA595B7-0FB8-4FB0-BBB1-4ACD307393E8")]
+coclass CImpLibWalker
+{
+    [default] interface IImpLibWalker;
+}
+
+[uuid("70135E55-1E74-4D8A-9884-0EF1FD8F4B23")]
+[helpstring("Library for read and write import name type of an import library")]
+library ImpLibEditorCore
+{
+    interface IImpMember;
+    interface IImpLibWalker;
+    coclass CImpLibWalker;
+}
