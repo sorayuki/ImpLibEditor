@@ -10,7 +10,7 @@ LIBRARY kernel32.dll
 EXPORTS
 Sleep
 
-Then you will find the link was looking for _Sleep@4 not Sleep.
+Then you will find the linker is looking for _Sleep@4, not Sleep.
 If .def file is changed to:
 
 LIBRARY kernel32.dll
